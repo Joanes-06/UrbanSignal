@@ -55,45 +55,101 @@
         {{-- ─── STEP 1: Category ─────────────────────────────────────────── --}}
         <div id="step-0" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Quel type de problème ?</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                @foreach($categories as $category)
-                <label class="cursor-pointer">
-                    <input type="radio" name="category_id" value="{{ $category->id }}" class="sr-only peer" {{ old('category_id') == $category->id ? 'checked' : '' }}>
-                    <div class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-gray-300 transition">
-                        <div class="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center" style="background-color: {{ $category->color }}20">
-                            <span style="color: {{ $category->color }}" class="w-7 h-7 block">
-                                @switch($category->slug)
-                                    @case('nid-de-poule')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                    @break
-                                    @case('affaissement-de-chaussee')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-                                    @break
-                                    @case('route-inondee')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
-                                    @break
-                                    @case('signalisation-endommagee')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
-                                    @break
-                                    @case('caniveau-bouche')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM9 16a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1H10a1 1 0 01-1-1v-2z"/></svg>
-                                    @break
-                                    @case('eclairage-public-defaillant')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                                    @break
-                                    @case('route-degradee')
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2.636.022M13 16l2.636.022M13 16V8h5.528a2 2 0 011.814 1.157l1.408 3.52A1.997 1.997 0 0122 14v2l-2.364.022M4.636 16.022L4 16"/></svg>
-                                    @break
-                                    @default
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                @endswitch
-                            </span>
-                        </div>
-                        <p class="text-xs font-medium text-gray-700 leading-tight">{{ $category->name }}</p>
-                    </div>
-                </label>
-                @endforeach
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="category-grid">
+    @foreach($categories as $category)
+    <label class="cursor-pointer">
+        <input type="radio" name="category_id" value="{{ $category->id }}"
+               class="sr-only peer"
+               {{ old('category_id') == $category->id ? 'checked' : '' }}
+               {{ $category->slug === 'autre' ? 'data-autre=1' : '' }}
+               onchange="handleCategoryChange(this)">
+        <div class="p-4 border-2 border-gray-200 rounded-xl text-center peer-checked:border-green-500 peer-checked:bg-green-50 hover:border-gray-300 transition">
+            <div class="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center"
+                 style="background-color: {{ $category->color }}20">
+                <span style="color: {{ $category->color }}" class="w-7 h-7 block">
+                    @switch($category->slug)
+                        @case('accident-de-circulation')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        @break
+                        @case('incendie')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"/></svg>
+                        @break
+                        @case('nid-de-poule')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        @break
+                        @case('caniveau-bouche')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zM9 16a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1H10a1 1 0 01-1-1v-2z"/></svg>
+                        @break
+                        @case('quartier-sans-eclairage')
+                        @case('lampadaire-en-panne')
+                        @case('lampadaire-clignotant')
+                        @case('eclairage-jour')
+                        @case('eclairage-decoratif-eteint')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                        @break
+                        @case('coupure-eau')
+                        @case('fuite-eau')
+                        @case('eau-anormale')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
+                        @break
+                        @case('egout-bouche')
+                        @case('plaque-egout-manquante')
+                        @case('mauvaise-odeur-egout')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        @break
+                        @case('poubelles-non-ramassees')
+                        @case('bacs-debordants')
+                        @case('decharge-sauvage')
+                        @case('espace-public-sale')
+                        @case('dejections-animaux-morts')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        @break
+                        @case('vegetation-envahissante')
+                        @case('branches-visibilite')
+                        @case('jardin-public-mal-entretenu')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                        @break
+                        @case('feux-tricolores-panne')
+                        @case('panneau-signalisation')
+                        @case('nom-rue-manquant')
+                        @case('marquage-sol-efface')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>
+                        @break
+                        @case('bruit-excessif')
+                        @case('probleme-service-public')
+                        @case('horaires-municipaux')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        @break
+                        @case('autre')
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        @break
+                        @default
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    @endswitch
+                </span>
             </div>
+            <p class="text-xs font-medium text-gray-700 leading-tight">{{ $category->name }}</p>
+        </div>
+    </label>
+    @endforeach
+</div>
+
+{{-- Champ "Autre problème" conditionnel --}}
+<div id="autre-field" class="hidden mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+        Décrivez votre problème <span class="text-red-500">*</span>
+    </label>
+    <input type="text"
+           name="autre_description"
+           id="autre-description-input"
+           maxlength="255"
+           placeholder="Ex: Poteau téléphonique penché dangereux..."
+           class="w-full px-4 py-2.5 border border-amber-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white text-gray-900">
+    <p class="text-xs text-amber-700 mt-1.5 flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Soyez précis pour que la mairie puisse traiter votre demande efficacement.
+    </p>
+</div>
 
             {{-- Arrondissement --}}
             <div class="mt-6">
@@ -434,6 +490,22 @@ document.getElementById('photoInput').addEventListener('change', function() {
     });
 });
 
+// ─── Gestion catégorie "Autre" ────────────────────────────
+function handleCategoryChange(input) {
+    const autreField = document.getElementById('autre-field');
+    const autreInput = document.getElementById('autre-description-input');
+
+    if (input.dataset.autre) {
+        autreField.classList.remove('hidden');
+        autreInput.setAttribute('required', 'required');
+        // scroll doux vers le champ
+        setTimeout(() => autreField.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+    } else {
+        autreField.classList.add('hidden');
+        autreInput.removeAttribute('required');
+        autreInput.value = '';
+    }
+}
 // Start at step 0
 showStep(0);
 </script>

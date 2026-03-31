@@ -18,13 +18,13 @@ class TeamSeeder extends Seeder
             ],
             [
                 'name'          => 'Équipe Voirie Sud',
-                'description'   => 'Responsable des arrondissements Ouidah III et IV',
+                'description'   => 'Responsable des arrondissements Ouidah III et Savi',
                 'contact_phone' => '+229 97 00 00 02',
                 'contact_email' => 'voirie.sud@mairie-ouidah.bj',
             ],
             [
                 'name'          => 'Équipe Voirie Est',
-                'description'   => 'Responsable des arrondissements Ouidah V et Pahou',
+                'description'   => 'Responsable des arrondissements Gakpé et Avlékété',
                 'contact_phone' => '+229 97 00 00 03',
                 'contact_email' => 'voirie.est@mairie-ouidah.bj',
             ],

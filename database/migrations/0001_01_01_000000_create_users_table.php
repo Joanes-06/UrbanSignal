@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone', 20)->nullable();
-            $table->enum('role', ['citizen', 'agent', 'admin'])->default('citizen');
+            $table->enum('role', ['citizen', 'agent', 'admin', 'superadmin'])->default('citizen');
             $table->string('arrondissement')->nullable();
             $table->string('avatar')->nullable();
             $table->boolean('is_active')->default(true);
@@ -25,6 +25,8 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

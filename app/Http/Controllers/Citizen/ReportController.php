@@ -17,7 +17,10 @@ class ReportController extends Controller
 {
     public function create()
     {
-        $categories      = Category::where('is_active', true)->orderBy('name')->get();
+        $categories = Category::orderBy('name')
+            ->get()
+            ->sortBy(fn($c) => $c->slug === 'autre' ? 1 : 0)
+            ->values();
         $arrondissements = Arrondissement::where('is_active', true)->orderBy('name')->get();
 
         return view('citizen.reports.create', compact('categories', 'arrondissements'));

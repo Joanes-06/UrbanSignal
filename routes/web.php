@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Citizen;
 use App\Http\Controllers\Agent;
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\SuperAdmin\SuperadminController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,39 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/signalements/statistiques', [Admin\ReportController::class, 'statistics'])->name('reports.statistics');
     Route::get('/signalements/{report}', [Admin\ReportController::class, 'show'])->name('reports.show');
 });
+
+// ─── Super Admin routes ──────────────────────────────────────────────────────
+ 
+Route::prefix('superadmin')
+    ->middleware(['auth', 'superadmin'])
+    ->name('superadmin.')
+    ->group(function () {
+ 
+        // Dashboard
+        Route::get('/dashboard',          [SuperadminController::class, 'dashboard'])->name('dashboard');
+ 
+        // Utilisateurs
+        Route::get('/users',              [SuperadminController::class, 'users'])->name('users');
+        Route::patch('/users/{user}/promote',        [SuperadminController::class, 'promoteUser'])->name('users.promote');
+        Route::post('/users/{user}/reset-password',  [SuperadminController::class, 'resetUserPassword'])->name('users.reset-password');
+        Route::post('/users/{user}/ban',             [SuperadminController::class, 'toggleUserBan'])->name('users.ban');
+ 
+        // Maintenance
+        Route::get('/maintenance',        [SuperadminController::class, 'maintenance'])->name('maintenance');
+        Route::post('/maintenance/toggle',[SuperadminController::class, 'toggleMaintenance'])->name('maintenance.toggle');
+ 
+        // Cache
+        Route::post('/cache/clear',       [SuperadminController::class, 'clearCache'])->name('cache.clear');
+ 
+        // Paramètres
+        Route::get('/settings',           [SuperadminController::class, 'settings'])->name('settings');
+        Route::post('/settings',          [SuperadminController::class, 'updateSettings'])->name('settings.update');
+ 
+        // Exports
+        Route::get('/export/users',       [SuperadminController::class, 'exportUsers'])->name('export.users');
+        Route::get('/export/reports',     [SuperadminController::class, 'exportReports'])->name('export.reports');
+    });
+ 
 
 // ─── Smart redirect after login ──────────────────────────────────────────────
 Route::get('/dashboard', function () {

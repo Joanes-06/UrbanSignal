@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             TeamSeeder::class,
             UserSeeder::class,
+            SuperAdminSeeder::class,
         ]);
     }
 }
